@@ -1,7 +1,8 @@
 {
-  "name": "Jamstacks starter",
-  "description": "A neutral Next.js foundation for Jamstacks websites.",
-  "domain": "",
+  "name": "Happy Trails Dog Walkers",
+  "description": "Friendly dog walks, puppy visits and pet sitting around Tenney Park on Madison's east side. Small groups, familiar walkers, photo notes after every walk.",
+  "domain": "next-dog-walking.jamstacks.net",
+  "timeZone": "America/Chicago",
   "jamstacks": {
     "siteId": "",
     "cdnUrl": "https://cdn.jamstacks.net"

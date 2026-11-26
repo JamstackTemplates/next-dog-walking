@@ -1,69 +1,89 @@
-# JamstackTemplates Next.js starter
+# Happy Trails Dog Walkers
 
-The shared starter for Next.js templates in the `JamstackTemplates` organization. Its canonical home is
-`JamstackTemplates/template-next`, alongside the templates generated from it.
-It is not a gallery design or a published demo. Business content is sample content. No application code
-in a website created from this template depends on the starter checkout or the portal repository.
+A friendly, park-green website for a small dog-walking and pet-sitting crew on Madison, Wisconsin's
+east side, built on the Jamstacks Next.js starter. **Happy Trails is a fictitious sample business for the
+Jamstacks gallery**: every walker, phone number and email is made up; the parks and neighborhoods are
+real public places. It is a self-contained static export (no server, database or payments) and does not
+depend on the starter or portal checkout.
 
-## Build your website
+Design concept, "Trailhead signs and dog tags": walk types are routed park-green trail signs with
+coloured trail blazes, the service area is a hand-drawn park map built from content, walkers hang as
+engraved dog tags on a leash-hook rail, and a dashed leash-red **Trail Line** with paw prints runs
+through every page. Dark mode is a dusk walk under the park lamps.
 
-Start in the checkout of the repository GitHub created from `JamstackTemplates/template-next`. All
-starter files are already present. Local development requires Node 24 or later and npm.
+## Run it
 
-To build a new site, fill in `plan/PLAN.md`, then tell the coding agent **`Implement plan/PLAN.md`**.
-In Claude Code, `/write-plan <business description>` drafts the brief for you. For a gallery template,
-pass the table row: `/write-plan next-type-style | Business | Description | Form purpose`.
-After reviewing the finished site, run `/cleanup-plan` or delete `plan/` and `.claude/skills/` by hand
-to remove all initial build instructions.
+Node 24 or later and npm:
 
-To preview locally, run `npm ci` and `npm run dev` from the repository root.
+```sh
+npm ci
+npm run dev        # local development
+npm run check      # tests, typecheck and static build
+npm start          # serve the built out/ folder like GitHub Pages
+```
 
 ## Pages
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Minimal content-driven home page and Organization JSON-LD |
-| `/contact/` | Hosted support form when configured; visible email alternative |
-| `/404.html` | Friendly static error page |
+| `/` | Hero park scene with a live "walkers out now" chip, signpost of walk types, how a walk works, service-area teaser, walker tags, owner notes, park-gate call to action. LocalBusiness JSON-LD |
+| `/walks/` | Every walk as a plank trail sign, sitting services as door hangers, add-ons notice board, what every walk includes |
+| `/service-area/` | Full trail map, "Is my street covered?" neighborhood finder, park postcards, edge and waitlist notes |
+| `/walkers/` | Leash-hook rail of walker tags that open into profiles, Biscuit the office dog, safety and trust |
+| `/contact/` | Hosted enquiry form when configured, otherwise an email fallback. Email, phone and walk hours always visible |
+| `/404.html` | "Trail closed" page with links back |
 
-## Make it yours
+## Make it yours: where to edit
 
-| File | Owns |
-| --- | --- |
-| `content/business.ts` | Shared business name, contact details and starter sample copy |
-| `app/page.tsx`, `app/<route>/page.tsx` | Page composition and editable copy such as headings and calls to action |
-| `content/menu.ts` or `content/services.ts` (add when needed) | Industry-specific typed collections |
-| `site.config.json` | Public name, description, hostname, optional timeZone and Jamstacks integration |
-| `app/tailwind.input.css` | Theme tokens, utility mappings and small shared styles |
-| `components/site-header.tsx`, `site-footer.tsx` | Replaceable navigation and visual shell |
-| `lib/structured-data.ts` | Schema type/properties derived from real content |
-| `app/sitemap.ts` | Public routes; update when adding a page |
+| What you want to change | File | Fields or section |
+| --- | --- | --- |
+| A walk's price, length, days or availability | `content/walks.ts` | `priceUsd` (whole dollars), `durationMinutes`, `days`, `available` (false shows "Paused for now"), `waitlist` (true shows "Waitlist, ask anyway") |
+| Add or rename a walk or sitting service | `content/walks.ts` | add an entry with a new URL-safe `id`, `kind: 'walk'` or `'sitting'`, a `blaze` and two to four `includes` |
+| Add-on charges | `content/add-ons.ts` | `label`, `priceUsd` (0 shows "Free"), `note` |
+| Which neighborhoods you cover | `content/service-area.ts` | each neighborhood's `status`: `core`, `edge` (+$5) or `waitlist`; `parks` and optional `note` |
+| Parks and their descriptions | `content/service-area.ts` | `parks` list |
+| Map shape for a new neighborhood or park | `components/art/map-zones.ts` | add an entry under the same `id` (the tests tell you when one is missing) |
+| Walker profiles | `content/walkers.ts` | `name`, `role`, `bio`, `funFact`, `certifications`, `favoriteWalk` (a walk `id`), `neighborhoods` (neighborhood `id`s), `available` |
+| Business name, email, phone, walk hours, owner notes, Contact checklist | `content/business.ts` | `name`, `email`, `phone`, `walkHours`, `walkHoursText`, `testimonials`, `enquiries` |
+| Headings, intros and calls to action | the page's `app/**/page.tsx` | written in page order as JSX children, e.g. `<Hero.Heading>` in `app/page.tsx` |
+| Public name, description, domain, time zone | `site.config.json` | keep the provisioner's shape; no business content here |
+| Colours, fonts, textures | `app/tailwind.input.css` | tokens in the light, automatic-dark and explicit-dark blocks |
 
-Edit page copy in the route file, for example `<Hero.Heading>Seasonal flowers</Hero.Heading>`
-in `app/page.tsx` for the Home page. The backing
-component owns the styling and interactions. Use typed fields for data the site needs to look up or
-reuse. For example, change `business.email` to update Contact. Rename in `business.name` and
-`site.config.json.name`. Add a typed core-content file for frequent owner edits: a food menu should use
-the existing sections/items/price/availability model; changes such as sold out, seasonal or a new section
-should be data edits with actionable content tests. Do not add business content to configuration: the
-Jamstacks provisioner replaces that file wholesale, possibly adding `provisioningId`.
+One source feeds every page: changing `park-pack`'s `priceUsd` from 32 to 34 updates the Home
+signpost, the Walks plank and the JSON-LD offer after a rebuild. Setting `maple-bluff` to `edge` re-fills
+its map zone, moves it in the finder and adds it to the JSON-LD `areaServed`. Every collection is validated
+when the site builds and by `npm test`; failures name the item to fix, for example
+`walks.ts "park-pack": priceUsd must be whole dollars from 1 to 250`.
 
-## Appearance and optional local-business features
+Wording rule: walks, meet & greets and sitting dates are **enquiries**. Say "ask about", never "book
+now" or "reserved"; a test checks the copy for booking language.
 
-The starter uses system fonts, neutral Tailwind v4 tokens and the published `jamstacks` package's
-ThemeProvider, ThemeScript and DarkModeToggle. No font download or font licence file is needed for
-system fonts. Each designed template chooses and documents self-hosted font packages and their licences.
-Utilities live in components; colours originate in CSS tokens with light, automatic-dark and explicit-dark
-values plus `@theme inline` mappings. Keep the hosted form's primary fill dark enough for white text.
-Keyboard focus, reduced motion and print styles are included. The footer credit is yours to keep,
-reword or remove.
+## Walk hours and the "walkers out now" chip
 
-For a business with visiting hours, add address/directions/hours to typed content, set the IANA `timeZone`
-in site.config.json and use optional `GoogleMap`, `TimeZoneNote` and `OpenBadge` components. GoogleMap
-accepts an address and descriptive title; map helpers need no key. `OpenBadge` accepts seven
-`OpeningHours` records, uses the business zone and refreshes each minute in the browser; static/no-JS
-output is neutral. Same-day intervals only: overnight hours fail validation and need a tested extension
-before use. The baseline home page does not load a map or assert opening hours.
+`content/business.ts` `walkHours` uses the shared seven-day model (`opens`/`closes` in 24-hour
+`HH:MM`, a day with no times is a day off) in the `America/Chicago` zone from `site.config.json`. The
+chip computes its status in the browser and refreshes every minute; static and no-JS output shows the
+neutral `walkHoursText`. Hours may not cross midnight; overnight sitting is a service, not opening
+hours. Tests cover the opening and closing minutes, Sunday, and both 2026 daylight-saving changes.
+
+## Interactions without JavaScript
+
+- Neighborhood finder: without JS every neighborhood's sign is listed in full and the Home links jump to
+  them; with JS the list becomes buttons that show one sign, highlight its map zone and keep a
+  `#neighborhood` link.
+- Walker tags are native `<details>` disclosures; `/walkers/#theo-brandt` opens that tag.
+- The Trail Line draws in as it scrolls into view; without JS or with reduced motion it is simply drawn.
+- The mobile menu is a native disclosure styled as a folded park map; Escape closes it.
+
+## Appearance
+
+Fonts are self-hosted from npm under the SIL Open Font License: **Titan One** (`@fontsource/titan-one`)
+for display and signs, **Kumbh Sans** (`@fontsource-variable/kumbh-sans`) for body text and **Gaegu**
+(`@fontsource/gaegu`) for walker handwriting only. All artwork is inline SVG in `components/art/`
+(no photos or stock icons), drawn in one 2.5px ink line over flat token fills, so dusk mode re-lights
+it through the CSS tokens. `public/og.png` (1200×630) is a static render of the hero art and
+wordmark; re-render it if the name or tagline changes. The primary green carries white button text in
+both themes (6.4:1 light, 5.2:1 dark).
 
 ## Public configuration
 

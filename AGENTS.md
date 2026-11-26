@@ -72,3 +72,31 @@ and Pages never import/read it. Keep site.config.json, the form and workflow out
 light/dark captures after a fresh normal build and run node --test jamstacks/config.test.mjs separately.
 Each new template needs its own business-led layout/fonts/art and OG image; do not ship the neutral
 starter as a final design. Remove `plan/` and `.claude/skills/` before publishing a gallery template once reviewed.
+
+## Happy Trails file ownership
+
+- Page copy, in page order: `app/page.tsx`, `app/walks/page.tsx`, `app/service-area/page.tsx`,
+  `app/walkers/page.tsx`, `app/contact/page.tsx`, `app/not-found.tsx`.
+- Typed data with validators (failures name the item): `content/walks.ts`, `content/add-ons.ts`,
+  `content/service-area.ts`, `content/walkers.ts`; shared details, walk hours, owner notes and Contact
+  checklist in `content/business.ts`.
+- Section components (markup, layout, behaviour): `components/home.tsx`, `walks-sections.tsx`,
+  `area-sections.tsx`, `walkers-sections.tsx`, `contact-sections.tsx`, `gate-cta.tsx`, `page-head.tsx`.
+  Browser-only: `walk-status.tsx`, `neighborhood-finder.tsx`, `open-from-hash.tsx`, `mobile-nav.tsx`,
+  `trail-reveal.tsx`.
+- Artwork: `components/art/` (kit, hero scene, signs, tags, icons, dog portraits and Biscuit in `dogs.tsx`, trail map). Map geometry per
+  neighborhood/park ID lives in `components/art/map-zones.ts`; tests require an entry for each.
+- The Trail Line (`TrailLine`/`TrailPath` in `components/art/kit.tsx`) is the signature element; keep
+  it fully drawn without JS and under reduced motion.
+- Walk status logic: `walkStatus`, `hoursRows`, `clockLabel` in `lib/hours.ts`; routes in `lib/routes.ts`.
+- Copy rule: walks and sitting are enquiries; `tests/content.test.ts` rejects booking language.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

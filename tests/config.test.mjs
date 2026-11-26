@@ -146,3 +146,19 @@ test('the workflow sets the Pages custom domain before reading the Pages configu
   assert.match(workflow, /gh api -X PUT "repos\/\$REPO\/pages" -f cname="\$domain"/);
   assert.match(workflow, /gh api -X PUT "repos\/\$REPO\/pages" -F https_enforced=true/);
 });
+
+test('site.config.json keeps the provisioner shape with this site’s public values', () => {
+  const configured = JSON.parse(readFileSync(new URL('../site.config.json', import.meta.url), 'utf8'));
+  assert.deepEqual(Object.keys(configured).sort(), ['description', 'domain', 'jamstacks', 'name', 'timeZone']);
+  assert.equal(configured.name, 'Happy Trails Dog Walkers');
+  assert.equal(configured.timeZone, 'America/Chicago');
+});
+
+test('every route is in the sitemap list and has a page', async () => {
+  const { ROUTES } = await import('../lib/routes.ts');
+  const { existsSync } = await import('node:fs');
+  for (const route of ROUTES) {
+    const file = route === '/' ? 'app/page.tsx' : `app${route}page.tsx`;
+    assert.ok(existsSync(new URL(`../${file}`, import.meta.url)), `${route}: missing ${file}`);
+  }
+});
